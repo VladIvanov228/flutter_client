@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:project_program/entity/data/company.dart';
 import 'package:project_program/entity/data/journal_item.dart';
+import 'package:project_program/entity/data/report_Item.dart';
 import 'package:project_program/entity/pagination.dart';
 import 'package:project_program/entity/data/user.dart';
 
@@ -18,26 +19,24 @@ class DataList<T> {
 
   factory DataList.fromJson(Map<String, dynamic> json) {
     return DataList<T>(
-      pagination: Pagination.fromJson(json['paginaton']),
-      count: int.parse(json['count']),
-      data: _parseData(json['data'], T) as List<T>
+      pagination: Pagination.fromJson(json['pagination']),
+      count: json['count'] ?? 0,
+      data: _parseData(json['data'] ?? json['schedules'] ?? json['entries'], T) as List<T>
     );
   }
 
-  static List _parseData(String source, Type type) {
+  static List _parseData(List<dynamic> source, Type type) {
     print(type);
     if(type==User) {
-      final List<dynamic> data = json.decode(source);
-      return data.map((json) => User.fromJson(json)).toList();
+      return source.map((json) => User.fromJson(json)).toList();
     } else if(type==Company) {
-      final List<dynamic> data = json.decode(source);
-      return data.map((json) => Company.fromJson(json)).toList();
+      return source.map((json) => Company.fromJson(json)).toList();
     } else if(type==JournalItem) {
-      final List<dynamic> data = json.decode(source);
-      return data.map((json) => JournalItem.fromJson(json)).toList();
+      return source.map((json) => JournalItem.fromJson(json)).toList();
     } else if(type==Schedule) {
-      final List<dynamic> data = json.decode(source);
-      return data.map((json) => Schedule.fromJson(json)).toList();
+      return source.map((json) => Schedule.fromJson(json)).toList();
+    } else if(type==ReportItem) {
+      return source.map((json) => ReportItem.fromJson(json)).toList();
     }
     return [];
   }

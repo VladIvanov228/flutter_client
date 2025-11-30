@@ -33,7 +33,7 @@ class User {
       last_name: json['last_name'],
       patronymic: json['middle_name'],
       role: json['role'],
-      password: json['password']
+      password: json['password'] ?? ""
     );
   }
 

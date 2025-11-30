@@ -19,11 +19,16 @@ class Schedule {
 
   factory Schedule.fromJson(Map<String, dynamic> json) {
     return Schedule(
-        id: int.parse(json['count']),
+        id: json['id'],
         free: json['free'],
-        start: TimeOfDay.fromDateTime(DateTime.parse(json['start'])),
-        end: TimeOfDay(hour: 0,minute: 0),
-        pause: TimeOfDay(hour: 0,minute: 0),
+        start: parseTime(json['start']),
+        end: parseTime(json['stop']),
+        pause:parseTime(json['pause']),
     );
+  }
+  
+  static TimeOfDay parseTime(String s) {
+    var t = s.split(":");
+    return TimeOfDay(hour: int.parse(t[0]), minute: int.parse(t[1]));
   }
 }

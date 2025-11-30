@@ -4,8 +4,10 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:pretty_http_logger/pretty_http_logger.dart';
 import 'package:project_program/entity/data/company.dart';
 import 'package:project_program/entity/data/journal_item.dart';
+import 'package:project_program/entity/data/report_Item.dart';
 import 'package:project_program/entity/data/schedule.dart';
 import 'package:project_program/entity/login_body.dart';
 import 'package:project_program/network/constants.dart';
@@ -20,40 +22,56 @@ class ApiService {
 
 
   static Future<http.Response> _GET(String url) {
-    return http.get(Uri.parse(url), headers: {
-      'Authorization': Get.find(tag: Constants.token_tag_storage)
+    HttpWithMiddleware http1 = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+    Get.find<String>(tag: Constants.token_tag_storage);
+    return http1.get(Uri.parse(url), headers: {
+      'Authorization': 'Bearer ${Get.find<String>(tag: Constants.token_tag_storage)}',
     });
   }
 
   static Future<http.Response> _POST(String url, String body) {
-    return http.post(Uri.parse(url), headers: {
-      'Authorization': Get.find(tag: Constants.token_tag_storage)
-    },body: body);
+    HttpWithMiddleware http1 = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+    return http1.post(Uri.parse(url), headers: url.contains("login") ? {'Content-Type': 'application/json'}
+            : {
+            'Authorization': 'Bearer ${Get.find<String>(tag: Constants.token_tag_storage)}',
+            'Content-Type': 'application/json'
+          },
+        body: body);
   }
 
   static Future<http.Response> _PATCH(String url, String body) {
-    return http.patch(Uri.parse(url), headers: {
-      'Authorization': Get.find(tag: Constants.token_tag_storage),
-        body: body
-    });
+    HttpWithMiddleware http1 = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+    return http1.patch(Uri.parse(url), headers: {
+      'Authorization': 'Bearer ${Get.find<String>(tag: Constants.token_tag_storage)}',
+      'Content-Type': 'application/json'
+    }, body: body);
   }
 
   static Future<http.Response> _PUT(String url, String body) {
-    return http.put(Uri.parse(url), headers: {
-      'Authorization': Get.find(tag: Constants.token_tag_storage),
-      body: body
-    });
+    HttpWithMiddleware http1 = HttpWithMiddleware.build(middlewares: [
+      HttpLogger(logLevel: LogLevel.BODY),
+    ]);
+    return http1.put(Uri.parse(url), headers: {
+      'Authorization': 'Bearer ${Get.find<String>(tag: Constants.token_tag_storage)}',
+      'Content-Type': 'application/json'
+    },body: body);
   }
 
   static Future<http.Response> _DELETE(String url) {
     return http.delete(Uri.parse(url), headers: {
-      'Authorization': Get.find(tag: Constants.token_tag_storage)
+      'Authorization': 'Bearer ${Get.find<String>(tag: Constants.token_tag_storage)}'
     });
   }
 
   ///POST
 
-  static Future<LoginBody> login(String id, String pass) async {
+  static Future<LoginBody> login(int id, String pass) async {
     var body = {
       'inn': id,
       'password': pass
@@ -73,7 +91,7 @@ class ApiService {
       'password': user.password,
       'last_name': user.last_name,
       'middle_name': user.patronymic,
-      'firs_name': user.first_name,
+      'first_name': user.first_name,
       'department_id': user.depart_id,
       'company_ogrn': user.company_id
     };
@@ -109,10 +127,11 @@ class ApiService {
   static Future<DataList<Company>> getOrganizations(int? id, int? perPage, int? page, String? name) async {
     var url = "$baseUrl/dis/companies";
     var add = "";
-    if(id!=null) add +="ogrn=$id";
-    if(perPage!=null) add +="per_page=$perPage";
-    if(page!=null) add +="page=$page";
-    if(name!=null) add +="name=$name";
+    if(id!=null) add +="&ogrn=$id";
+    if(perPage!=null) add +="&per_page=$perPage";
+    if(page!=null) add +="&page=$page";
+    if(name!=null) add +="&name=$name";
+    if(add.startsWith("&")) add = add.substring(1);
     if(add.isNotEmpty) url = "$url?$add";
     final response = await _GET(url);
     if(response.statusCode==200) {
@@ -126,15 +145,17 @@ class ApiService {
       String? first_name, String? last_name, String? middle_name, int? depart_id, String? role, int? company_id, int? schedule_id) async {
     var url = "$baseUrl/dis/users";
     var add = "";
-    if(id!=null) add +="inn=$id";
-    if(perPage!=null) add +="per_page=$perPage";
-    if(page!=null) add +="page=$page";
-    if(first_name!=null) add +="first_name=$first_name";
-    if(middle_name!=null) add +="middle_name=$middle_name";
-    if(last_name!=null) add +="last_name=$last_name";
-    if(role!=null) add +="role=$role";
-    if(company_id!=null) add +="company_ogrn=$company_id";
-    if(depart_id!=null) add +="schedule_id=$depart_id";
+    if(id!=null) add +="&inn=$id";
+    if(perPage!=null) add +="&per_page=$perPage";
+    if(page!=null) add +="&page=$page";
+    if(first_name!=null) add +="&first_name=$first_name";
+    if(middle_name!=null) add +="&middle_name=$middle_name";
+    if(last_name!=null) add +="&last_name=$last_name";
+    if(role!=null) add +="&role=$role";
+    if(company_id!=null) add +="&company_ogrn=$company_id";
+    if(schedule_id!=null) add +="&schedule_id=$depart_id";
+    if(depart_id!=null) add +="&department_id=$depart_id";
+    if(add.startsWith("&")) add = add.substring(1);
     if(add.isNotEmpty) url = "$url?$add";
     final response = await _GET(url);
     if(response.statusCode==200) {
@@ -148,22 +169,23 @@ class ApiService {
       String? first_name, String? last_name, String? middle_name, int? company_id, int? schedule_id, String? status, DateTime? date,
         String? note, TimeOfDay? start, TimeOfDay? end
       ) async {
-    var url = "$baseUrl/journal/get";
+    var url = "$baseUrl/dis/jour";
     var add = "";
-    if(id!=null) add +="inn=$id";
-    if(perPage!=null) add +="per_page=$perPage";
-    if(page!=null) add +="page=$page";
-    if(first_name!=null) add +="first_name=$first_name";
-    if(middle_name!=null) add +="middle_name=$middle_name";
-    if(last_name!=null) add +="last_name=$last_name";
-    if(company_id!=null) add +="user_company_ogrn=$company_id";
-    if(schedule_id!=null) add +="user_schedule_id=$schedule_id";
-    if(status!=null) add +="status=$status";
-    if(date!=null) add +="date=$date";
-    if(note!=null) add +="note=$note";
-    if(start!=null) add +="start_time=$start";
-    if(end!=null) add +="stop_time=$end";
-    if(user_id!=null) add +="user_inn=$user_id";
+    if(id!=null) add +="&id=$id";
+    if(perPage!=null) add +="&per_page=$perPage";
+    if(page!=null) add +="&page=$page";
+    if(first_name!=null) add +="&first_name=$first_name";
+    if(middle_name!=null) add +="&middle_name=$middle_name";
+    if(last_name!=null) add +="&last_name=$last_name";
+    if(company_id!=null) add +="&user_company_ogrn=$company_id";
+    if(schedule_id!=null) add +="&user_schedule_id=$schedule_id";
+    if(status!=null) add +="&status=$status";
+    if(date!=null) add +="&date=$date";
+    if(note!=null) add +="&note=$note";
+    if(start!=null) add +="&start_time=$start";
+    if(end!=null) add +="&stop_time=$end";
+    if(user_id!=null) add +="&user_inn=$user_id";
+    if(add.startsWith("&")) add = add.substring(1);
     if(add.isNotEmpty) url = "$url?$add";
     final response = await _GET(url);
     if(response.statusCode==200) {
@@ -173,24 +195,25 @@ class ApiService {
     }
   }
 
-  static Future<DataList<JournalItem>> getJournalItems(int? id, int? perPage, int? page,
+  static Future<DataList<ReportItem>> getJournalItems(int? id, int? perPage, int? page,
       String? first_name, String? last_name, String? middle_name, int? depart_id, int? company_id, String? status, DateTime? date) async {
     var url = "$baseUrl/journal/get";
     var add = "";
-    if(id!=null) add +="inn=$id";
-    if(perPage!=null) add +="per_page=$perPage";
-    if(page!=null) add +="page=$page";
-    if(first_name!=null) add +="first_name=$first_name";
-    if(middle_name!=null) add +="middle_name=$middle_name";
-    if(last_name!=null) add +="last_name=$last_name";
-    if(company_id!=null) add +="company_ogrn=$company_id";
-    if(depart_id!=null) add +="schedule_id=$depart_id";
-    if(status!=null) add +="status=$status";
-    if(date!=null) add +="date=$date";
+    if(id!=null) add +="&inn=$id";
+    if(perPage!=null) add +="&per_page=$perPage";
+    if(page!=null) add +="&page=$page";
+    if(first_name!=null) add +="&first_name=$first_name";
+    if(middle_name!=null) add +="&middle_name=$middle_name";
+    if(last_name!=null) add +="&last_name=$last_name";
+    if(company_id!=null) add +="&company_ogrn=$company_id";
+    if(depart_id!=null) add +="&department_id=$depart_id";
+    if(status!=null) add +="&status=$status";
+    if(date!=null) add +="&date=$date";
+    if(add.startsWith("&")) add = add.substring(1);
     if(add.isNotEmpty) url = "$url?$add";
     final response = await _GET(url);
     if(response.statusCode==200) {
-      return DataList<JournalItem>.fromJson(jsonDecode(response.body));
+      return DataList<ReportItem>.fromJson(jsonDecode(response.body));
     } else {
       throw Exception();
     }
@@ -199,9 +222,10 @@ class ApiService {
   static Future<DataList<Schedule>> geSchedules(int? perPage, int? page, bool? free) async {
     var url = "$baseUrl/dis/sch";
     var add = "";
-    if(perPage!=null) add +="per_page=$perPage";
-    if(page!=null) add +="page=$page";
-    if(free!=null) add +="free=$free";
+    if(perPage!=null) add +="&per_page=$perPage";
+    if(page!=null) add +="&page=$page";
+    if(free!=null) add +="&free=$free";
+    if(add.startsWith("&")) add = add.substring(1);
     if(add.isNotEmpty) url = "$url?$add";
     final response = await _GET(url);
     if(response.statusCode==200) {
@@ -214,7 +238,7 @@ class ApiService {
   ///PUT
 
   static Future<Answer> addJournalItem(JournalItem item) async {
-    final response = await _PATCH("$baseUrl/journal/put", jsonEncode(item));
+    final response = await _PUT("$baseUrl/journal/put", jsonEncode(item.toJson()));
     final Map<String, dynamic> data = json.decode(response.body);
     return Answer(message: data['message'],code: response.statusCode);
   }
@@ -240,7 +264,7 @@ class ApiService {
   }
 
   static Future<Answer> deleteUser(String id) async {
-    final response = await _GET("$baseUrl/del/user/$id");
+    final response = await _DELETE("$baseUrl/del/user/$id");
     final Map<String, dynamic> data = json.decode(response.body);
     return Answer(message: data['message'],code: response.statusCode);
   }

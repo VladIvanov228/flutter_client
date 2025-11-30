@@ -9,7 +9,7 @@ class Company {
 
   factory Company.fromJson(Map<String, dynamic> json) {
     return Company(
-        id: int.parse(json['inn'].toString()),
+        id: int.parse(json['ogrn'].toString()),
         name: json['name'],
     );
   }
