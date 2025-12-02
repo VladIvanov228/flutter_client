@@ -61,8 +61,8 @@ class ReportItem {
         last_name: json['last_name'],
         patronymic: json['middle_name'],
         depart_id: int.parse(json['department_id'].toString()),
-        required: int.parse(json['required_work_minutes'].toString()),
-        actual: int.parse(json['actual_work_minutes'].toString()),
+        required: double.parse(json['required_work_minutes'].toString()).round(),
+        actual: double.parse(json['actual_work_minutes'].toString()).round(),
     );
   }
   static TimeOfDay parseTime(String s) {
