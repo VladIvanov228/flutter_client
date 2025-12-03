@@ -1,8 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- 
+/**
+ * @openapi
+ * /ios/Runner/Base.lproj/LaunchScreen.storyboard:
+ *   get:
+ *     summary: Получить конфигурацию экрана загрузки
+ *     description: |
+ *       Storyboard для splash screen (экрана загрузки).
+ *       Отображается при запуске приложения до инициализации Flutter.
+ *     tags:
+ *       - UI
+ *       - Launch
+ *       - Storyboard
+ *     responses:
+ *       200:
+ *         description: Успешное получение конфигурации launch screen
+ *         content:
+ *           application/xml:
+ *             schema:
+ *               $ref: '#/components/schemas/LaunchScreen'
+ */
+-->
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+
+        <!-- 
+    /**
+     * @openapi-component
+     * components:
+     *   schemas:
+     *     LaunchScreen:
+     *       type: object
+     *       description: Конфигурация экрана загрузки
+     *       properties:
+     *         documentType:
+     *           type: string
+     *           example: "com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB"
+     *           description: Тип документа Interface Builder
+     *         targetRuntime:
+     *           type: string
+     *           example: "iOS.CocoaTouch"
+     *           description: Целевая платформа (iOS)
+     *         isLaunchScreen:
+     *           type: boolean
+     *           example: true
+     *           description: Является ли экраном загрузки
+     *         initialViewController:
+     *           type: string
+     *           example: "01J-lp-oVM"
+     *           description: ID начального ViewController
+     */
+     -->
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -16,9 +66,50 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+
+                         <!-- 
+                            /**
+                             * @openapi-component
+                             *         launchImageView:
+                             *           type: object
+                             *           description: ImageView для изображения загрузки
+                             *           properties:
+                             *             imageName:
+                             *               type: string
+                             *               example: "LaunchImage"
+                             *               description: Имя изображения в Assets.xcassets
+                             *             contentMode:
+                             *               type: string
+                             *               example: "center"
+                             *               enum: [center, scaleToFill, scaleAspectFit, scaleAspectFill]
+                             *               description: Режим отображения изображения
+                             *             constraints:
+                             *               type: array
+                             *               items:
+                             *                 type: object
+                             *                 properties:
+                             *                   type:
+                             *                     type: string
+                             *                     example: "centerX"
+                             *                   target:
+                             *                     type: string
+                             *                     example: "superview.centerX"
+                             */
+                             -->
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="LaunchImage" translatesAutoresizingMaskIntoConstraints="NO" id="YRO-k0-Ey4">
                             </imageView>
                         </subviews>
+
+                         <!-- 
+                        /**
+                         * @openapi-component
+                         *         backgroundColor:
+                         *           type: string
+                         *           example: "#FFFFFF"
+                         *           description: Цвет фона экрана загрузки (белый)
+                         *           format: hex-color
+                         */
+                         -->
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="YRO-k0-Ey4" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="1a2-6s-vTC"/>
@@ -32,6 +123,30 @@
         </scene>
     </scenes>
     <resources>
+     <!-- 
+        /**
+         * @openapi-component
+         *         launchImage:
+         *           type: object
+         *           description: Изображение для экрана загрузки
+         *           properties:
+         *             name:
+         *               type: string
+         *               example: "LaunchImage"
+         *               description: Идентификатор изображения
+         *             dimensions:
+         *               type: object
+         *               properties:
+         *                 width:
+         *                   type: integer
+         *                   example: 168
+         *                   description: Ширина изображения в points
+         *                 height:
+         *                   type: integer
+         *                   example: 185
+         *                   description: Высота изображения в points
+         */
+         -->
         <image name="LaunchImage" width="168" height="185"/>
     </resources>
 </document>

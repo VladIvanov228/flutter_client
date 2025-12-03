@@ -1,3 +1,19 @@
+/**
+ * SETTINGS: Настройки проекта Gradle
+ * 
+ * Описание: Определяет структуру проекта и плагины
+ * 
+ * Ключевые элементы:
+ * 1. Указание пути к Flutter SDK
+ * 2. Подключение Flutter плагинов
+ * 3. Подключение модулей (только :app)
+ * 
+ * Плагины:
+ * - Flutter Plugin Loader
+ * - Android Application
+ * - Kotlin Android
+ */
+
 pluginManagement {
     def flutterSdkPath = {
         def properties = new Properties()

@@ -1,7 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- 
+/**
+ * @openapi
+ * /ios/Runner/Info.plist:
+ *   get:
+ *     summary: Получить основную конфигурацию приложения
+ *     description: |
+ *       Главный файл конфигурации iOS приложения.
+ *       Содержит метаданные, разрешения, ориентации и настройки.
+ *     tags:
+ *       - Configuration
+ *       - Metadata
+ *       - iOS
+ *     parameters:
+ *       - $ref: '#/components/parameters/BuildConfiguration'
+ *     responses:
+ *       200:
+ *         description: Успешное получение конфигурации приложения
+ *         content:
+ *           application/xml:
+ *             schema:
+ *               $ref: '#/components/schemas/InfoPlist'
+ */
+-->
 <plist version="1.0">
 <dict>
+<!-- 
+  /**
+   * @openapi-component
+   * components:
+   *   parameters:
+   *     BuildConfiguration:
+   *       name: config
+   *       in: query
+   *       description: Конфигурация сборки
+   *       required: false
+   *       schema:
+   *         type: string
+   *         enum: [Debug, Release, Profile]
+   *         default: "Debug"
+   * 
+   *   schemas:
+   *     InfoPlist:
+   *       type: object
+   *       description: Конфигурация Info.plist
+   *       properties:
+   *         CFBundleDevelopmentRegion:
+   *           type: string
+   *           example: "$(DEVELOPMENT_LANGUAGE)"
+   *           description: |
+   *             Язык разработки, используется для локализации.
+   *             Переменная заполняется автоматически Xcode.
+   *         CFBundleDisplayName:
+   *           type: string
+   *           example: "Project Program"
+   *           description: Имя приложения под иконкой
+   *         CFBundleIdentifier:
+   *           type: string
+   *           example: "$(PRODUCT_BUNDLE_IDENTIFIER)"
+   *           description: |
+   *             Уникальный идентификатор приложения (обратный DNS).
+   *             Пример: com.ourteam.kovrigin.project_program
+   */
+   -->
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -16,6 +78,25 @@
 	<string>project_program</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<!-- 
+  /**
+   * @openapi-component
+   *         CFBundleShortVersionString:
+   *           type: string
+   *           example: "$(FLUTTER_BUILD_NAME)"
+   *           description: |
+   *             Маркетинговая версия приложения (1.0.0).
+   *             Отображается в App Store.
+   *             Берется из pubspec.yaml (version: 1.0.0+1)
+   *         CFBundleVersion:
+   *           type: string
+   *           example: "$(FLUTTER_BUILD_NUMBER)"
+   *           description: |
+   *             Номер сборки приложения.
+   *             Должен увеличиваться с каждой сборкой.
+   *             Берется из pubspec.yaml (version: 1.0.0+1)
+   */
+   -->
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
@@ -24,10 +105,44 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- 
+  /**
+   * @openapi-component
+   *         UILaunchStoryboardName:
+   *           type: string
+   *           example: "LaunchScreen"
+   *           description: Имя storyboard для экрана загрузки
+   *         UIMainStoryboardFile:
+   *           type: string
+   *           example: "Main"
+   *           description: Главный storyboard приложения
+   */
+   -->
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<!-- 
+  /**
+   * @openapi-component
+   *         UISupportedInterfaceOrientations:
+   *           type: array
+   *           description: Поддерживаемые ориентации для iPhone
+   *           items:
+   *             type: string
+   *             enum:
+   *               - UIInterfaceOrientationPortrait
+   *               - UIInterfaceOrientationPortraitUpsideDown
+   *               - UIInterfaceOrientationLandscapeLeft
+   *               - UIInterfaceOrientationLandscapeRight
+   *           minItems: 1
+   *           maxItems: 4
+   *           example:
+   *             - UIInterfaceOrientationPortrait
+   *             - UIInterfaceOrientationLandscapeLeft
+   *             - UIInterfaceOrientationLandscapeRight
+   */
+   -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -41,6 +156,24 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	<!-- 
+  /**
+   * @openapi-component
+   *         CADisableMinimumFrameDurationOnPhone:
+   *           type: boolean
+   *           example: true
+   *           description: |
+   *             Отключает минимальную длительность кадра (60 FPS).
+   *             Позволяет достичь более плавной анимации.
+   *         UIApplicationSupportsIndirectInputEvents:
+   *           type: boolean
+   *           example: true
+   *           description: |
+   *             Поддержка внешних устройств ввода (клавиатуры, мыши).
+   *             Требуется для iPadOS и внешних аксессуаров.
+   */
+   -->
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

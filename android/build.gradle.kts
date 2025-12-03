@@ -1,3 +1,16 @@
+/**
+ * GRADLE CONFIG: Корневая конфигурация сборки
+ * 
+ * Назначение: Общие настройки для всех модулей проекта
+ * 
+ * Репозитории:
+ * - Google Maven Repository
+ * - Maven Central
+ * 
+ * Задачи:
+ * - clean - Очистка директории сборки
+ */
+
 allprojects {
     repositories {
         google()

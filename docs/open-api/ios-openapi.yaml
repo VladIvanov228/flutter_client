@@ -1,0 +1,219 @@
+openapi: 3.0.0
+info:
+  title: iOS Flutter Project Configuration API
+  description: Документация конфигурационных файлов iOS части Flutter проекта
+  version: 1.0.0
+  contact:
+    name: Development Team
+    email: dev@example.com
+
+servers:
+  - url: file:///ios
+    description: Локальная директория iOS проекта
+  - url: xcode://scheme/Runner
+    description: Xcode схема Runner
+
+paths:
+  /Flutter/AppFrameworkInfo.plist:
+    $ref: '#/components/paths/AppFrameworkInfo'
+  
+  /Runner/AppDelegate.swift:
+    $ref: '#/components/paths/AppDelegate'
+  
+  /Runner/Info.plist:
+    $ref: '#/components/paths/InfoPlist'
+  
+  /Runner/Base.lproj/LaunchScreen.storyboard:
+    $ref: '#/components/paths/LaunchScreen'
+  
+  /Runner/Base.lproj/Main.storyboard:
+    get:
+      summary: Получить главный storyboard
+      description: Главный интерфейс приложения с FlutterViewController
+      tags: [UI, Storyboard]
+      responses:
+        200:
+          description: Успешное получение main storyboard
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MainStoryboard'
+  
+  /Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme:
+    get:
+      summary: Получить схему сборки Xcode
+      description: Конфигурация сборки, тестирования и запуска
+      tags: [Build, Xcode]
+      responses:
+        200:
+          description: Успешное получение схемы сборки
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/XcodeScheme'
+
+components:
+  paths:
+    AppFrameworkInfo:
+      get:
+        summary: Получить конфигурацию Flutter Framework
+        description: Файл конфигурации Flutter фреймворка
+        tags: [Configuration, Flutter]
+        responses:
+          200:
+            description: Успешно
+            content:
+              application/xml:
+                schema:
+                  $ref: '#/components/schemas/FlutterFrameworkConfig'
+    
+    AppDelegate:
+      get:
+        summary: Получить точку входа приложения
+        description: AppDelegate - управление жизненным циклом
+        tags: [Application, Lifecycle]
+        responses:
+          200:
+            description: Успешно
+            content:
+              application/swift:
+                schema:
+                  $ref: '#/components/schemas/AppDelegate'
+    
+    InfoPlist:
+      get:
+        summary: Получить основную конфигурацию приложения
+        description: Главный файл конфигурации iOS приложения
+        tags: [Configuration, Metadata]
+        parameters:
+          - $ref: '#/components/parameters/BuildConfig'
+        responses:
+          200:
+            description: Успешно
+            content:
+              application/xml:
+                schema:
+                  $ref: '#/components/schemas/InfoPlistConfig'
+    
+    LaunchScreen:
+      get:
+        summary: Получить экран загрузки
+        description: Splash screen при запуске приложения
+        tags: [UI, Launch]
+        responses:
+          200:
+            description: Успешно
+            content:
+              application/xml:
+                schema:
+                  $ref: '#/components/schemas/LaunchScreenConfig'
+
+  schemas:
+    FlutterFrameworkConfig:
+      type: object
+      properties:
+        CFBundleDevelopmentRegion:
+          type: string
+          enum: [en, ru, de, fr, es]
+          default: "en"
+        MinimumOSVersion:
+          type: string
+          pattern: '^\d{2}\.\d+$'
+          example: "12.0"
+        CFBundleVersion:
+          type: string
+          example: "1.0"
+    
+    AppDelegate:
+      type: object
+      properties:
+        className:
+          type: string
+          example: "AppDelegate"
+        inheritance:
+          type: string
+          example: "FlutterAppDelegate"
+        lifecycleMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/LifecycleMethod'
+    
+    LifecycleMethod:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "application(_:didFinishLaunchingWithOptions:)"
+        returnType:
+          type: string
+          example: "Bool"
+    
+    InfoPlistConfig:
+      type: object
+      properties:
+        CFBundleDisplayName:
+          type: string
+          example: "Project Program"
+        CFBundleIdentifier:
+          type: string
+          example: "com.ourteam.kovrigin.project_program"
+        UISupportedInterfaceOrientations:
+          type: array
+          items:
+            type: string
+            enum:
+              - UIInterfaceOrientationPortrait
+              - UIInterfaceOrientationLandscapeLeft
+              - UIInterfaceOrientationLandscapeRight
+    
+    LaunchScreenConfig:
+      type: object
+      properties:
+        backgroundColor:
+          type: string
+          format: hex-color
+          example: "#FFFFFF"
+        launchImage:
+          type: string
+          example: "LaunchImage"
+    
+    MainStoryboard:
+      type: object
+      properties:
+        viewController:
+          type: string
+          example: "FlutterViewController"
+    
+    XcodeScheme:
+      type: object
+      properties:
+        configurations:
+          type: array
+          items:
+            type: string
+            enum: [Debug, Release, Profile]
+
+  parameters:
+    BuildConfig:
+      name: config
+      in: query
+      description: Конфигурация сборки
+      schema:
+        type: string
+        enum: [Debug, Release, Profile]
+      example: "Debug"
+
+  securitySchemes:
+    XcodeAccess:
+      type: http
+      scheme: bearer
+      description: Доступ к Xcode
+    DeveloperAccount:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://appleid.apple.com/auth/authorize
+          tokenUrl: https://appleid.apple.com/auth/token
+          scopes:
+            read:projects: "Чтение проектов"
+            write:builds: "Запись сборок"

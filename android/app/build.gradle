@@ -1,3 +1,20 @@
+/**
+ * CONFIGURATION: Основной файл сборки Android-приложения
+ * 
+ * Описание: Конфигурация сборки Android-приложения на Flutter.
+ * Использует Groovy DSL для настройки проекта.
+ * 
+ * Версия: 1.0
+ * Язык: Groovy
+ * Минимальная SDK: flutter.minSdkVersion
+ * Целевая SDK: flutter.targetSdkVersion
+ * 
+ * @property applicationId Уникальный идентификатор приложения
+ * @property namespace Пространство имен пакета
+ * @property versionCode Код версии для магазина приложений
+ * @property versionName Человеко-читаемая версия
+ */
+
 plugins {
     id "com.android.application"
     id "kotlin-android"

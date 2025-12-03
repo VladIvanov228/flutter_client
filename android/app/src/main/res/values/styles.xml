@@ -1,3 +1,20 @@
+<!--
+STYLES: Тематизация приложения
+
+Стили:
+1. LaunchTheme - Тема загрузочного экрана
+   - Применяется при запуске приложения
+   - Автоматически удаляется после первой отрисовки Flutter
+
+2. NormalTheme - Основная тема
+   - Применяется после инициализации Flutter
+   - Определяет фон за Flutter UI
+
+Режимы:
+- values/styles.xml - Светлая тема
+- values-night/styles.xml - Темная тема
+-->
+
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->

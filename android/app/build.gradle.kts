@@ -1,3 +1,15 @@
+/**
+ * CONFIGURATION: Альтернативная конфигурация на Kotlin DSL
+ * 
+ * Описание: Тот же функционал, что и в build.gradle, но на Kotlin DSL.
+ * Предоставляет типобезопасность и современный синтаксис.
+ * 
+ * Основные отличия:
+ * - Kotlin DSL вместо Groovy
+ * - Версия Java 17 вместо 1.8
+ * - Более строгая типизация
+ */
+
 plugins {
     id("com.android.application")
     id("kotlin-android")

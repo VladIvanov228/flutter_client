@@ -1,7 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- 
+/**
+ * @openapi
+ * /ios/Flutter/AppFrameworkInfo.plist:
+ *   get:
+ *     summary: Получить конфигурацию Flutter Framework
+ *     description: |
+ *       Файл конфигурации Flutter фреймворка для iOS.
+ *       Содержит метаданные, версию и требования к системе.
+ *     tags:
+ *       - Configuration
+ *       - Flutter
+ *     responses:
+ *       200:
+ *         description: Успешное получение конфигурации Flutter
+ *         content:
+ *           application/xml:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 CFBundleDevelopmentRegion:
+ *                   type: string
+ *                   example: "en"
+ *                   description: Регион разработки для локализации
+ *                 CFBundleExecutable:
+ *                   type: string
+ *                   example: "App"
+ *                   description: Имя исполняемого файла фреймворка
+ *                 CFBundleIdentifier:
+ *                   type: string
+ *                   example: "io.flutter.flutter.app"
+ *                   description: Уникальный идентификатор Flutter фреймворка
+ *                 MinimumOSVersion:
+ *                   type: string
+ *                   example: "12.0"
+ *                   description: Минимальная версия iOS для работы Flutter
+ */
+-->
 <plist version="1.0">
 <dict>
+  <!-- 
+  /**
+   * @openapi-component
+   * components:
+   *   schemas:
+   *     FlutterFrameworkConfig:
+   *       type: object
+   *       description: Конфигурация Flutter Framework
+   *       properties:
+   *         CFBundleDevelopmentRegion:
+   *           type: string
+   *           enum: [en, ru, de, fr, es]
+   *           default: "en"
+   *           description: |
+   *             Язык по умолчанию для ресурсов фреймворка.
+   *             Влияет на локализацию системных сообщений Flutter.
+   */
+   -->
   <key>CFBundleDevelopmentRegion</key>
   <string>en</string>
   <key>CFBundleExecutable</key>
@@ -20,6 +76,29 @@
   <string>????</string>
   <key>CFBundleVersion</key>
   <string>1.0</string>
+  <!-- 
+  /**
+   * @openapi-component
+   *   parameters:
+   *     MinimumOSVersion:
+   *       name: MinimumOSVersion
+   *       in: query
+   *       description: Минимальная версия iOS
+   *       required: true
+   *       schema:
+   *         type: string
+   *         pattern: '^\d{2}\.\d+$'
+   *         example: "12.0"
+   *         description: |
+   *           Минимальная версия iOS, требуемая для работы Flutter.
+   *           Формат: Major.Minor (например, 12.0, 13.4)
+   *           
+   *           Версия 12.0 означает:
+   *           - Поддержка iPhone 5s и новее
+   *           - Поддержка iPad Air и новее
+   *           - Поддержка iPad mini 2 и новее
+   */
+   -->
   <key>MinimumOSVersion</key>
   <string>12.0</string>
 </dict>

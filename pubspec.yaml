@@ -46,6 +46,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+
+documentation:
+  openapi_specs:
+    - path: docs/openapi/ios.yaml
+      title: iOS Configuration
+    - path: docs/openapi/android.yaml
+      title: Android Configuration
+  api_docs: docs/swagger-ui/index.html
+
+  
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your

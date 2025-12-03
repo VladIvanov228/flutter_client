@@ -1,3 +1,19 @@
+<!-- 
+MANIFEST: Основной манифест приложения
+Версия: 1.0
+Цель: Описание структуры Android-приложения
+
+Ключевые элементы:
+1. <application> - Конфигурация приложения
+   - android:name="${applicationName}" - Имя класса приложения
+   - android:icon="@mipmap/ic_launcher" - Иконка приложения
+   
+2. <activity> - Главная активность
+   - android:name=".MainActivity" - Класс основной активности
+   - android:launchMode="singleTop" - Режим запуска
+   - Разрешения: Интернет, PROCESS_TEXT
+-->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:label="project_program"
