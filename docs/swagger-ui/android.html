@@ -217,43 +217,43 @@
 
     <div class="container">
         <div class="info-panel">
-            <h3>📋 Обзор конфигурации</h3>
+            <h3> Обзор конфигурации</h3>
             <p>Документация описывает все конфигурационные файлы Android-части Flutter проекта, включая Gradle сборку, манифесты, ресурсы и исходный код.</p>
 
             <div class="info-grid">
                 <div class="info-card">
-                    <h4><span class="card-icon">⚙️</span> Gradle Configuration</h4>
+                    <h4><span class="card-icon">⚙</span> Gradle Configuration</h4>
                     <p>Файлы сборки: build.gradle, build.gradle.kts, settings.gradle. Определяют зависимости, версии SDK и настройки сборки.</p>
                 </div>
 
                 <div class="info-card">
-                    <h4><span class="card-icon">📄</span> Android Manifest</h4>
+                    <h4><span class="card-icon"></span> Android Manifest</h4>
                     <p>Манифесты приложения: main, debug, profile. Определяют компоненты, разрешения и метаданные приложения.</p>
                 </div>
 
                 <div class="info-card">
-                    <h4><span class="card-icon">🎨</span> Resources & Styles</h4>
+                    <h4><span class="card-icon"></span> Resources & Styles</h4>
                     <p>Ресурсы приложения: стили, темы, drawable. Включает светлую и темную тему, фон загрузочного экрана.</p>
                 </div>
 
                 <div class="info-card">
-                    <h4><span class="card-icon">💻</span> Kotlin Code</h4>
+                    <h4><span class="card-icon"></span> Kotlin Code</h4>
                     <p>Исходный код: MainActivity.kt - точка входа в Android-приложение, наследует от FlutterActivity.</p>
                 </div>
             </div>
 
             <div class="quick-links">
                 <a href="#swagger-ui" class="quick-link">
-                    <span>🚀</span> Открыть Swagger UI
+                    <span></span> Открыть Swagger UI
                 </a>
                 <a href="../openapi/android.yaml" download class="quick-link">
-                    <span>📥</span> Скачать OpenAPI Spec
+                    <span></span> Скачать OpenAPI Spec
                 </a>
                 <a href="ios.html" class="quick-link">
-                    <span>🍎</span> iOS Documentation
+                    <span></span> iOS Documentation
                 </a>
                 <a href="https://developer.android.com" target="_blank" class="quick-link">
-                    <span>📚</span> Android Docs
+                    <span></span> Android Docs
                 </a>
             </div>
         </div>
@@ -264,7 +264,7 @@
     </div>
 
     <footer>
-        <p>📱 Android Flutter Configuration Documentation • Version 1.0.0 • Built with OpenAPI 3.0</p>
+        <p> Android Flutter Configuration Documentation • Version 1.0.0 • Built with OpenAPI 3.0</p>
         <p style="margin-top: 0.5rem; opacity: 0.8; font-size: 0.9rem;">
             Package: com.ourteam.kovrigin.project_program • Min SDK: 21 • Target SDK: 34
         </p>
@@ -276,13 +276,13 @@
 
     <script>
         // Проверка перед загрузкой
-        console.log("🚀 Загрузка Android OpenAPI документации...");
+        console.log(" Загрузка Android OpenAPI документации...");
 
         window.onload = function() {
             // Путь к OpenAPI спецификации
             const openApiUrl = "../openapi/android.yaml";
 
-            console.log("📂 Загрузка спецификации из:", openApiUrl);
+            console.log(" Загрузка спецификации из:", openApiUrl);
 
             // Конфигурация Swagger UI
             const ui = SwaggerUIBundle({
@@ -318,7 +318,7 @@
 
                 // Обработчики событий
                 onComplete: function() {
-                    console.log("✅ Android OpenAPI документация успешно загружена!");
+                    console.log(" Android OpenAPI документация успешно загружена!");
 
                     // Добавляем кастомные стили для Swagger
                     const style = document.createElement('style');
@@ -352,7 +352,7 @@
                 },
 
                 onFailure: function(error) {
-                    console.error("❌ Ошибка загрузки OpenAPI:", error);
+                    console.error(" Ошибка загрузки OpenAPI:", error);
 
                     // Показываем дружественное сообщение об ошибке
                     document.getElementById('swagger-ui').innerHTML = `
@@ -381,7 +381,7 @@
                                     font-size: 16px;
                                     cursor: pointer;
                                     margin: 0 10px;
-                                ">🔄 Обновить страницу</button>
+                                "> Обновить страницу</button>
 
                                 <button onclick="location.href='./test-setup.html'" style="
                                     background: #f5f5f5;
@@ -392,7 +392,7 @@
                                     font-size: 16px;
                                     cursor: pointer;
                                     margin: 0 10px;
-                                ">🧪 Запустить тест</button>
+                                "> Запустить тест</button>
                             </div>
                         </div>
                     `;
@@ -405,16 +405,16 @@
         // Тестовый запрос для проверки доступности файла
         fetch("../openapi/android.yaml")
             .then(response => {
-                console.log("📊 Статус загрузки файла:", response.status);
+                console.log(" Статус загрузки файла:", response.status);
                 return response.text();
             })
             .then(text => {
-                console.log("📄 Размер файла:", text.length, "символов");
-                console.log("✅ Файл доступен и валиден");
+                console.log(" Размер файла:", text.length, "символов");
+                console.log(" Файл доступен и валиден");
             })
             .catch(error => {
-                console.error("❌ Файл недоступен:", error);
-                console.log("💡 Запустите локальный сервер: python3 -m http.server 8000");
+                console.error(" Файл недоступен:", error);
+                console.log(" Запустите локальный сервер: python3 -m http.server 8000");
             });
     </script>
 </body>

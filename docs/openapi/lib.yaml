@@ -1,0 +1,1057 @@
+openapi: 3.0.0
+info:
+  title: Project Program - Flutter Application API
+  description: |
+    Документация мобильного приложения для учета рабочего времени.
+    Система включает роли: Администратор, Начальник отдела, Сотрудник.
+  version: 1.0.0
+  contact:
+    name: Development Team
+    email: dev@example.com
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://127.0.0.1:20000
+    description: Backend API Server
+  - url: file:///lib
+    description: Flutter Application Source Code
+
+tags:
+  - name: Authentication
+    description: Аутентификация и авторизация
+  - name: Users
+    description: Управление пользователями
+  - name: Companies
+    description: Управление организациями
+  - name: Schedules
+    description: Графики работы
+  - name: Journal
+    description: Журнал учета рабочего времени
+  - name: Reports
+    description: Отчеты и аналитика
+  - name: UI
+    description: Пользовательские интерфейсы
+
+paths:
+  #  BACKEND API ENDPOINTS 
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Вход в систему
+      description: Аутентификация пользователя по ИНН и паролю
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Успешная аутентификация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Неверные учетные данные
+
+  /auth/reg:
+    post:
+      tags: [Users]
+      summary: Регистрация нового пользователя
+      description: Создание учетной записи сотрудника
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationRequest'
+      responses:
+        '200':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+        '400':
+          description: Ошибка валидации данных
+
+  /dis/users:
+    get:
+      tags: [Users]
+      summary: Получение списка пользователей
+      description: |
+        Получение списка пользователей с пагинацией и фильтрацией.
+        Доступно для администраторов и начальников отделов.
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/FirstName'
+        - $ref: '#/components/parameters/LastName'
+        - $ref: '#/components/parameters/MiddleName'
+        - $ref: '#/components/parameters/Role'
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/DepartmentId'
+        - $ref: '#/components/parameters/ScheduleId'
+      responses:
+        '200':
+          description: Список пользователей
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataListUser'
+
+  /dis/companies:
+    get:
+      tags: [Companies]
+      summary: Получение списка организаций
+      description: Получение списка компаний с пагинацией
+      parameters:
+        - $ref: '#/components/parameters/CompanyIdParam'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/CompanyName'
+      responses:
+        '200':
+          description: Список организаций
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataListCompany'
+
+  /dis/jour:
+    get:
+      tags: [Journal]
+      summary: Получение записей журнала
+      description: Получение записей рабочего времени с фильтрацией
+      parameters:
+        - $ref: '#/components/parameters/JournalId'
+        - $ref: '#/components/parameters/UserIdParam'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/FirstName'
+        - $ref: '#/components/parameters/LastName'
+        - $ref: '#/components/parameters/MiddleName'
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/ScheduleId'
+        - $ref: '#/components/parameters/Status'
+        - $ref: '#/components/parameters/Date'
+        - $ref: '#/components/parameters/Note'
+        - $ref: '#/components/parameters/StartTime'
+        - $ref: '#/components/parameters/EndTime'
+      responses:
+        '200':
+          description: Список записей журнала
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataListJournalItem'
+
+  /journal/get:
+    get:
+      tags: [Reports]
+      summary: Получение отчетов
+      description: Получение отчетов по рабочему времени
+      parameters:
+        - $ref: '#/components/parameters/UserIdParam'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/FirstName'
+        - $ref: '#/components/parameters/LastName'
+        - $ref: '#/components/parameters/MiddleName'
+        - $ref: '#/components/parameters/DepartmentId'
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/Status'
+        - $ref: '#/components/parameters/Date'
+      responses:
+        '200':
+          description: Список отчетов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataListReportItem'
+
+  /dis/sch:
+    get:
+      tags: [Schedules]
+      summary: Получение списка графиков
+      description: Получение графиков работы с пагинацией
+      parameters:
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/FreeSchedule'
+      responses:
+        '200':
+          description: Список графиков работы
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataListSchedule'
+
+  /add/company:
+    post:
+      tags: [Companies]
+      summary: Добавление новой организации
+      description: Создание новой компании в системе
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCompanyRequest'
+      responses:
+        '200':
+          description: Организация успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+
+  /add/schedule:
+    post:
+      tags: [Schedules]
+      summary: Добавление графика работы
+      description: Создание нового графика работы
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddScheduleRequest'
+      responses:
+        '200':
+          description: График успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+
+  /journal/put:
+    put:
+      tags: [Journal]
+      summary: Добавление записи в журнал
+      description: Создание записи о рабочем времени
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JournalItemRequest'
+      responses:
+        '200':
+          description: Запись успешно добавлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+
+  /patch/user:
+    patch:
+      tags: [Users]
+      summary: Редактирование пользователя
+      description: Обновление информации о пользователе
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserRequest'
+      responses:
+        '200':
+          description: Пользователь успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+
+  /patch/sch:
+    patch:
+      tags: [Schedules]
+      summary: Редактирование графика
+      description: Обновление информации о графике работы
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditScheduleRequest'
+      responses:
+        '200':
+          description: График успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+
+  /patch/company:
+    patch:
+      tags: [Companies]
+      summary: Редактирование организации
+      description: Обновление информации об организации
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditCompanyRequest'
+      responses:
+        '200':
+          description: Организация успешно обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+
+  /del/company/{id}:
+    delete:
+      tags: [Companies]
+      summary: Удаление организации
+      description: Удаление компании из системы
+      parameters:
+        - $ref: '#/components/parameters/CompanyIdPath'
+      responses:
+        '200':
+          description: Организация успешно удалена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+
+  /del/user/{id}:
+    delete:
+      tags: [Users]
+      summary: Удаление пользователя
+      description: Удаление учетной записи пользователя
+      parameters:
+        - $ref: '#/components/parameters/UserIdPath'
+      responses:
+        '200':
+          description: Пользователь успешно удален
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+
+  #  UI SCREENS 
+  /ui/loginPage:
+    get:
+      tags: [UI]
+      summary: Страница входа
+      description: Экран аутентификации пользователя
+      responses:
+        '200':
+          description: Успешное получение UI страницы
+          content:
+            application/dart:
+              schema:
+                $ref: '#/components/schemas/UILoginPage'
+
+  /ui/adminPage:
+    get:
+      tags: [UI]
+      summary: Панель администратора
+      description: Главный экран администратора системы
+      responses:
+        '200':
+          description: Успешное получение UI страницы
+          content:
+            application/dart:
+              schema:
+                $ref: '#/components/schemas/UIAdminPage'
+
+  /ui/employeePage:
+    get:
+      tags: [UI]
+      summary: Панель сотрудника
+      description: Рабочий экран сотрудника для учета времени
+      parameters:
+        - $ref: '#/components/parameters/UserIdParam'
+      responses:
+        '200':
+          description: Успешное получение UI страницы
+          content:
+            application/dart:
+              schema:
+                $ref: '#/components/schemas/UIEmployeePage'
+
+  /ui/managerPage:
+    get:
+      tags: [UI]
+      summary: Панель начальника отдела
+      description: Экран начальника для управления отделом
+      parameters:
+        - $ref: '#/components/parameters/UserIdParam'
+      responses:
+        '200':
+          description: Успешное получение UI страницы
+          content:
+            application/dart:
+              schema:
+                $ref: '#/components/schemas/UIManagerPage'
+
+  /ui/addUserPage:
+    get:
+      tags: [UI]
+      summary: Страница добавления пользователя
+      description: Форма регистрации нового сотрудника
+      responses:
+        '200':
+          description: Успешное получение UI страницы
+          content:
+            application/dart:
+              schema:
+                $ref: '#/components/schemas/UIAddUserPage'
+
+components:
+  schemas:
+    #  DATA MODELS 
+    User:
+      type: object
+      description: Модель пользователя
+      properties:
+        id:
+          type: integer
+          description: ИНН пользователя
+          example: 1234567890
+        depart_id:
+          type: integer
+          description: ID отдела
+          example: 101
+        first_name:
+          type: string
+          description: Имя
+          example: "Иван"
+        last_name:
+          type: string
+          description: Фамилия
+          example: "Иванов"
+        patronymic:
+          type: string
+          description: Отчество
+          example: "Иванович"
+        company_id:
+          type: integer
+          description: ОГРН компании
+          example: 1234500000
+        schedule_id:
+          type: integer
+          description: ID графика работы
+          example: 1
+        role:
+          type: string
+          enum: [admin, moderator, user]
+          description: Роль пользователя
+          example: "user"
+        password:
+          type: string
+          description: Пароль (только для создания)
+          example: "secret123"
+
+    Company:
+      type: object
+      description: Модель организации
+      properties:
+        id:
+          type: integer
+          description: ОГРН компании
+          example: 1234500000
+        name:
+          type: string
+          description: Название компании
+          example: "ООО Ромашка"
+
+    Schedule:
+      type: object
+      description: Модель графика работы
+      properties:
+        id:
+          type: integer
+          description: ID графика
+          example: 1
+        start:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Время начала работы
+        pause:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Время перерыва
+        end:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Время окончания работы
+        free:
+          type: boolean
+          description: Свободный график
+          example: false
+
+    JournalItem:
+      type: object
+      description: Запись в журнале учета времени
+      properties:
+        id:
+          type: integer
+          description: ID записи
+          example: 1001
+        start:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Фактическое время начала
+        pause:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Фактическое время перерыва
+        end:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Фактическое время окончания
+        status:
+          type: string
+          enum: [норм, опоздание, ранний уход]
+          description: Статус рабочего дня
+          example: "норм"
+        note:
+          type: string
+          description: Заметка
+          example: "Работал над проектом"
+        user_inn:
+          type: integer
+          description: ИНН сотрудника
+          example: 1234567890
+        company_id:
+          type: integer
+          description: ОГРН компании
+          example: 1234500000
+        schedule_id:
+          type: integer
+          description: ID графика
+          example: 1
+        date:
+          type: string
+          format: date
+          description: Дата записи
+          example: "2024-01-15"
+
+    ReportItem:
+      type: object
+      description: Отчет по рабочему времени
+      properties:
+        start:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Фактическое время начала
+        start_schedule:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Плановое время начала
+        pause:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Фактическое время перерыва
+        pause_schedule:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Плановое время перерыва
+        end:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Фактическое время окончания
+        end_schedule:
+          $ref: '#/components/schemas/TimeOfDay'
+          description: Плановое время окончания
+        status:
+          type: string
+          description: Статус
+          example: "норм"
+        note:
+          type: string
+          description: Заметка
+        first_name:
+          type: string
+          description: Имя сотрудника
+        last_name:
+          type: string
+          description: Фамилия сотрудника
+        patronymic:
+          type: string
+          description: Отчество сотрудника
+        user_inn:
+          type: integer
+          description: ИНН сотрудника
+        company_id:
+          type: integer
+          description: ОГРН компании
+        depart_id:
+          type: integer
+          description: ID отдела
+        date:
+          type: string
+          format: date
+          description: Дата отчета
+        required:
+          type: integer
+          description: Требуемое время работы (минуты)
+          example: 480
+        actual:
+          type: integer
+          description: Фактическое время работы (минуты)
+          example: 475
+
+    TimeOfDay:
+      type: object
+      description: Время суток (час:минута)
+      properties:
+        hour:
+          type: integer
+          minimum: 0
+          maximum: 23
+          example: 9
+        minute:
+          type: integer
+          minimum: 0
+          maximum: 59
+          example: 0
+      example:
+        hour: 9
+        minute: 0
+
+    Pagination:
+      type: object
+      description: Информация о пагинации
+      properties:
+        per_page:
+          type: integer
+          description: Элементов на странице
+          example: 20
+        total:
+          type: integer
+          description: Всего элементов
+          example: 150
+        pages:
+          type: integer
+          description: Всего страниц
+          example: 8
+        page:
+          type: integer
+          description: Текущая страница
+          example: 1
+
+    DataListUser:
+      allOf:
+        - $ref: '#/components/schemas/DataList'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+
+    DataListCompany:
+      allOf:
+        - $ref: '#/components/schemas/DataList'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Company'
+
+    DataListSchedule:
+      allOf:
+        - $ref: '#/components/schemas/DataList'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Schedule'
+
+    DataListJournalItem:
+      allOf:
+        - $ref: '#/components/schemas/DataList'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/JournalItem'
+
+    DataListReportItem:
+      allOf:
+        - $ref: '#/components/schemas/DataList'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReportItem'
+
+    DataList:
+      type: object
+      description: Обертка для списков с пагинацией
+      properties:
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+        count:
+          type: integer
+          description: Количество элементов
+          example: 20
+        data:
+          type: array
+          description: Массив данных
+
+    LoginRequest:
+      type: object
+      required: [inn, password]
+      properties:
+        inn:
+          type: integer
+          description: ИНН пользователя
+          example: 1234567890
+        password:
+          type: string
+          description: Пароль
+          example: "secret123"
+
+    LoginResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID пользователя
+        role:
+          type: string
+          enum: [admin, moderator, user]
+          description: Роль пользователя
+        token:
+          type: string
+          description: JWT токен для авторизации
+
+    RegistrationRequest:
+      type: object
+      required: [inn, password, last_name, first_name, department_id, company_ogrn]
+      properties:
+        inn:
+          type: integer
+          description: ИНН пользователя
+        password:
+          type: string
+          description: Пароль
+        last_name:
+          type: string
+          description: Фамилия
+        first_name:
+          type: string
+          description: Имя
+        middle_name:
+          type: string
+          description: Отчество
+        department_id:
+          type: integer
+          description: ID отдела
+        company_ogrn:
+          type: integer
+          description: ОГРН компании
+
+    GenericResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: HTTP статус код
+          example: 200
+        message:
+          type: string
+          description: Сообщение ответа
+          example: "Успешно"
+
+    #  UI SCHEMAS 
+    UILoginPage:
+      type: object
+      description: UI страница входа
+      properties:
+        widgets:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [TextField, ElevatedButton, Text]
+              properties:
+                type: object
+        validation:
+          type: object
+          properties:
+            inn:
+              type: array
+              items:
+                type: string
+              example: ["required", "digits_only", "length_10_or_12"]
+            password:
+              type: array
+              items:
+                type: string
+              example: ["required"]
+
+    UIAdminPage:
+      type: object
+      description: UI панель администратора
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                enum: [search, users, roles, reports]
+              description:
+                type: string
+        features:
+          type: array
+          items:
+            type: string
+          example: ["user_search", "user_management", "role_assignment", "report_viewing"]
+
+    UIEmployeePage:
+      type: object
+      description: UI панель сотрудника
+      properties:
+        states:
+          type: array
+          items:
+            type: string
+          enum: [not_started, working, break, finished]
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                enum: [start_work, end_work, start_break, end_break]
+              enabled_when:
+                type: string
+
+    UIManagerPage:
+      type: object
+      description: UI панель начальника отдела
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+          example: ["view_department_users", "view_reports", "approve_requests"]
+
+    UIAddUserPage:
+      type: object
+      description: UI форма добавления пользователя
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormField'
+        validators:
+          type: object
+
+    FormField:
+      type: object
+      description: Поле формы
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [text, dropdown, password]
+        required:
+          type: boolean
+        validation:
+          type: array
+          items:
+            type: string
+
+  parameters:
+    #  COMMON PARAMETERS 
+    UserId:
+      name: inn
+      in: query
+      description: ИНН пользователя
+      required: false
+      schema:
+        type: integer
+      example: 1234567890
+
+    UserIdParam:
+      name: user_inn
+      in: query
+      description: ИНН пользователя
+      required: false
+      schema:
+        type: integer
+
+    UserIdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID пользователя
+
+    CompanyIdParam:
+      name: ogrn
+      in: query
+      description: ОГРН компании
+      required: false
+      schema:
+        type: integer
+
+    CompanyId:
+      name: company_ogrn
+      in: query
+      description: ОГРН компании
+      required: false
+      schema:
+        type: integer
+
+    CompanyIdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID компании
+
+    JournalId:
+      name: id
+      in: query
+      description: ID записи журнала
+      required: false
+      schema:
+        type: integer
+
+    PerPage:
+      name: per_page
+      in: query
+      description: Количество элементов на странице
+      required: false
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+
+    Page:
+      name: page
+      in: query
+      description: Номер страницы
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+
+    FirstName:
+      name: first_name
+      in: query
+      description: Имя пользователя
+      required: false
+      schema:
+        type: string
+
+    LastName:
+      name: last_name
+      in: query
+      description: Фамилия пользователя
+      required: false
+      schema:
+        type: string
+
+    MiddleName:
+      name: middle_name
+      in: query
+      description: Отчество пользователя
+      required: false
+      schema:
+        type: string
+
+    Role:
+      name: role
+      in: query
+      description: Роль пользователя
+      required: false
+      schema:
+        type: string
+        enum: [admin, moderator, user]
+
+    DepartmentId:
+      name: department_id
+      in: query
+      description: ID отдела
+      required: false
+      schema:
+        type: integer
+
+    ScheduleId:
+      name: schedule_id
+      in: query
+      description: ID графика работы
+      required: false
+      schema:
+        type: integer
+
+    Status:
+      name: status
+      in: query
+      description: Статус записи
+      required: false
+      schema:
+        type: string
+
+    Date:
+      name: date
+      in: query
+      description: Дата в формате YYYY-MM-DD
+      required: false
+      schema:
+        type: string
+        format: date
+
+    Note:
+      name: note
+      in: query
+      description: Поиск по заметке
+      required: false
+      schema:
+        type: string
+
+    StartTime:
+      name: start_time
+      in: query
+      description: Время начала (HH:MM)
+      required: false
+      schema:
+        type: string
+
+    EndTime:
+      name: stop_time
+      in: query
+      description: Время окончания (HH:MM)
+      required: false
+      schema:
+        type: string
+
+    CompanyName:
+      name: name
+      in: query
+      description: Название компании
+      required: false
+      schema:
+        type: string
+
+    FreeSchedule:
+      name: free
+      in: query
+      description: Фильтр по свободному графику
+      required: false
+      schema:
+        type: boolean
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT токен авторизации
