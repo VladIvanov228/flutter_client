@@ -45,6 +45,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  shelf: ^1.4.0
+  shelf_router: ^1.1.0
+  build_runner: ^2.4.0
+  test: ^1.24.0
+  get: ^4.7.2
 
 
 
@@ -66,12 +71,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  documentation:
-    openapi_specs:
-      ios: "docs/openapi/ios.yaml"
-      android: "docs/openapi/android.yaml"
+  # documentation:
+  #   openapi_specs:
+  #     ios: "docs/openapi/ios.yaml"
+  #     android: "docs/openapi/android.yaml"
     
-    build_instructions: "docs/BUILD.md"
+  #   build_instructions: "docs/BUILD.md"
 
   # To add assets to your application, add an assets section, like this:
   # assets:

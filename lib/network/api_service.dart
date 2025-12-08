@@ -153,7 +153,7 @@ class ApiService {
     if(last_name!=null) add +="&last_name=$last_name";
     if(role!=null) add +="&role=$role";
     if(company_id!=null) add +="&company_ogrn=$company_id";
-    if(schedule_id!=null) add +="&schedule_id=$depart_id";
+    if(schedule_id!=null) add +="&schedule_id=$depart_id"; //ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА
     if(depart_id!=null) add +="&department_id=$depart_id";
     if(add.startsWith("&")) add = add.substring(1);
     if(add.isNotEmpty) url = "$url?$add";
@@ -258,7 +258,7 @@ class ApiService {
   }
 
   static Future<Answer> deleteSchedule(String id) async {
-    final response = await _GET("$baseUrl/del/schedule/$id");
+    final response = await _GET("$baseUrl/del/schedule/$id"); //ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА//ОШИБКА
     final Map<String, dynamic> data = json.decode(response.body);
     return Answer(message: data['message'],code: response.statusCode);
   }
